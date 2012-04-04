@@ -21,7 +21,6 @@ Writer::Writer(char* filen)
 Writer::~Writer()//Destructor.
 {
   delete[] fileName;
-  delete[] temp;
 }
 
 //setFile: Tries to open given file. If it does, it is changed to writing mode.
