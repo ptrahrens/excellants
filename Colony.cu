@@ -38,7 +38,7 @@ Colony::Colony(thrust::host_vector<float> newDistances, int newNumCities, int ne
   CCKey = thrust::device_vector<int>(numCities*numCities);
   //scratch variables
   AFloat = thrust::device_vector<float>(numAnts);
-  CInt = thrust::device_vector<float>(numCities);
+  CInt = thrust::device_vector<int>(numCities);
   AInt = thrust::device_vector<int>(numAnts);
   ACInt = thrust::device_vector<int>(numAnts*numCities);
   ACInt2 = thrust::device_vector<int>(numAnts*numCities);
