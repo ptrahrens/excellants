@@ -5,28 +5,38 @@
 # Peter Ahrens
 # 
 
-all: Ants	
+all: CFLAGS=-O3
+all: Ants
+
+OpenMP: CFLAGS=-O2 -Xcompiler -fopenmp -DTHRUST_DEVICE_SYSTEM=THRUST_DEVICE_BACKEND_OMP -lgomp
+OpenMP: Ants
+
+TBB: CFLAGS=-O2 -DTHRUST_DEVICE_SYSTEM=THRUST_DEVICE_BACKEND_TBB -ltbb
+TBB: Ants
+
+Debug: CFLAGS=-DTHRUST_DEBUG
+Debug: Ants
 
 Ants: Colony.o RankBasedAntSystem.o TSPReader.o Writer.o Comm.o Setup.o
-	nvcc Setup.o Comm.o Writer.o TSPReader.o Colony.o RankBasedAntSystem.o -O3 -o Ants
+	nvcc Setup.o Comm.o Writer.o TSPReader.o Colony.o RankBasedAntSystem.o -o Ants $(CFLAGS)
 
 Setup.o: Setup.cpp
-	nvcc Setup.cpp -c -O3
+	nvcc Setup.cpp -c $(CFLAGS)
 
 Comm.o: Comm.cpp
-	nvcc Comm.cpp -c -O3
+	nvcc Comm.cpp -c $(CFLAGS)
 
 Writer.o: Writer.cpp
-	nvcc Writer.cpp -c -O3
+	nvcc Writer.cpp -c $(CFLAGS)
 
 TSPReader.o: TSPReader.cu
-	nvcc TSPReader.cu -c -O3
+	nvcc TSPReader.cu -c $(CFLAGS)
 
 RankBasedAntSystem.o: RankBasedAntSystem.cu
-	nvcc RankBasedAntSystem.cu -c -O3
+	nvcc RankBasedAntSystem.cu -c $(CFLAGS)
 
 Colony.o: Colony.cu
-	nvcc Colony.cu -c -O3
+	nvcc Colony.cu -c $(CFLAGS)
 
 clean:
 	- rm Colony.o RankBasedAntSystem.o TSPReader.o Writer.o Comm.o Setup.o Ants
