@@ -5,7 +5,7 @@
  ****************************************/
 
 #include "RankBasedAntSystem.h"
-
+#include <thrust/swap.h>
 //constructor: Allocates memory and sets defaults.
 RankBasedAntSystem::RankBasedAntSystem(thrust::host_vector<float> newDistances, int newNumCities, int newNumAnts)
   : Colony(newDistances, newNumCities, newNumAnts)
@@ -61,9 +61,15 @@ void RankBasedAntSystem::updatePheromones()
 		    pheromones.begin(),
 		    thrust::multiplies<float>());
   //determine ant pheromone levels
-  thrust::stable_sort_by_key(thrust::make_permutation_iterator(antDistances.begin(),ACKey.begin()),
-			     thrust::make_permutation_iterator(antDistances.end(),ACKey.end()),
-			     antTours.begin());
+  //sort first w ants
+  int x,z;
+  for(int i = 0; i < w; i++){
+    x = thrust::min_element(antDistances.begin() + i,antDistances.end())-(antDistances.begin() + i) + i;
+	antDistances[i] = z;
+	antDistances[i] = antDistances[x];
+	antDistances[x] = z;
+	thrust::swap_ranges(antTours.begin() + x*numCities, antTours.begin() + (x+1)*numCities,antTours.begin() + i*numCities);
+  }
   thrust::transform(RBASWeight.begin(),
 		    RBASWeight.end(),
 		    antDistances.begin(),

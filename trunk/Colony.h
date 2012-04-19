@@ -170,11 +170,10 @@ class Colony
   //scratch variables
   thrust::device_vector<float> AFloat;
   thrust::device_vector<int> AInt;
-  thrust::device_vector<int> NInt;
+  thrust::device_vector<int> CInt;
   thrust::device_vector<int> ACInt;
   thrust::device_vector<int> ACInt2;
   thrust::device_vector<int> ACInt3;
-  thrust::device_vector<int> ANInt;
   thrust::device_vector<float> ACFloat;
   thrust::device_vector<float> CCFloat;
   thrust::device_vector<unsigned int> AUnsignedInt;
