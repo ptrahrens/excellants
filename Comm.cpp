@@ -55,6 +55,19 @@ string Comm::intToString(int t, int padding)
   oss << setfill('0') << setw(padding) << t;
   return oss.str();
 }
+string Comm::intToString(int t)
+{
+    std::ostringstream oss;
+    oss << t;
+    return oss.str();
+}
+
+string Comm::floatToString(float t)
+{
+    std::ostringstream oss;
+    oss << t;
+    return oss.str();
+}
 
 //Copyright (c) 2012, Peter Ahrens
 //All rights reserved.

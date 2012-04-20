@@ -23,11 +23,13 @@ class Comm
   ~Comm();
   string recieve(); //recieve: Looks for data on the pipe. If there is some, it is returned. If not, an empty string is returned.
   bool send(string message); //send: Puts the given data on the pipe
+  static string intToString(int t, int padding); //intToString: Converts an int to a specified size string with 0s as padding.
+  static string intToString(int t); //intToString: Converts an int to a string.
+  static string floatToString(float t); //floatToString: Converts an float to a string.
  private:
   int tagLength;
   int readPipe;
   int writePipe;
-  string intToString(int t, int padding); //intToString: Converts an int to a specified size string with 0s as padding.
 };
 #endif
 

@@ -25,6 +25,7 @@ class RankBasedAntSystem : Colony{
   double getIterBestDist();
   double getGlobBestDist();
   int getReps();
+  std::string getTour();
  private:
   void computeInitialPheromone(); // Computes the initial pheromone level with the formula described by Marco Dorigo.
   void updatePheromones(); // Evaporates, then the ants lay pheromone at levels corresponding to their rank, judged by the distances of their tours.

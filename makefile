@@ -5,7 +5,7 @@
 # Peter Ahrens
 # 
 
-all: CFLAGS=-O3
+all: CFLAGS=
 all: Ants
 
 OpenMP: CFLAGS=-O2 -Xcompiler -fopenmp -DTHRUST_DEVICE_SYSTEM=THRUST_DEVICE_BACKEND_OMP -lgomp
