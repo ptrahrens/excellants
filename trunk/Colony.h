@@ -21,9 +21,11 @@
 #include <thrust/scan.h>
 #include <thrust/sort.h>
 #include <thrust/remove.h>
-#include <iostream>
 #include <sys/time.h>
 #include <math.h>
+#include <stdlib.h>
+#include <string>
+#include "Comm.h"
 //saxpy_functor: Performs the operation s = a * x + y, where a is a constant.
 struct saxpy_functor
 {
@@ -129,6 +131,7 @@ class Colony
   double getGlobBestDist();
   int getReps();
   virtual void computeParameters() = 0; //Implemented differently in each ACO.
+  std::string getTour();
  protected:
   float greedyDistance(); // Returns the value of a simple greedy solution starting at city 0.
   virtual void computeInitialPheromone() = 0; //Implemented differently in each ACO.
@@ -171,6 +174,7 @@ class Colony
   thrust::device_vector<float> AFloat;
   thrust::device_vector<int> AInt;
   thrust::device_vector<int> CInt;
+  thrust::device_vector<int> CInt2;
   thrust::device_vector<int> ACInt;
   thrust::device_vector<int> ACInt2;
   thrust::device_vector<int> ACInt3;

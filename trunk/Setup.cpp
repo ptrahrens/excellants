@@ -13,6 +13,8 @@
 #include <string>
 #include <cctype>
 #include <ctime>
+#include <fstream>
+#include <cstdlib>
 using namespace std;
 
 //Setup: The main control loop to the whole program.
@@ -86,9 +88,28 @@ int main(int argc, char* argv[]){
       Comm C(CHILD_READ,CHILD_WRITE);
       cout << ">" << flush; //----Checkpoint 3
       if(!C.send(string("Test"))){
-	cout << "\n Interprocess Comm Failed";
-	return 1;
+	    cout << "\n Interprocess Comm Failed";
+	    return 1;
       }
+      ofstream outfile("GUIFile", ios_base::out);
+      outfile.close();
+      if(!outfile){
+        cout << "\n" << "Unable to open GUIFile\n";
+        return 1;
+      }
+      string GUIInfo = "";
+      while(GUIInfo != "TERM"){
+	    GUIInfo = C.recieve();
+        if(GUIInfo != ""){
+          ofstream outfile("GUIFile", ios_base::out);
+          for(int i = 0; !outfile && i < 10; i++){ //try to open GUIFile 10 more times, then give up.
+            ofstream outfile("GUIFile", ios_base::out);
+          }
+          outfile << GUIInfo;
+          outfile.close();
+        }
+      }
+      return 0;
     }else if(pID < 0){//fail
       cout << "Failed to fork";
       return 1;
@@ -102,7 +123,7 @@ int main(int argc, char* argv[]){
       t.read(filen);
       cout << ">" << flush;//----Checkpoint 4
       if(m == -1){
-	m = t.getNumNodes();
+	    m = t.getNumNodes();
       }
       RankBasedAntSystem antHill(t.getDistances(),t.getNumNodes(),m);
       cout << ">" << flush;//----Checkpoint 5
@@ -118,20 +139,21 @@ int main(int argc, char* argv[]){
       cout << ">" << flush;//----Checkpoint 6
       antHill.initialize();
       if(C.recieve() == "Test"){ //A check to find out if the comm is working.
-	cout << ">\n" << flush;//----Checkpoint 7
+	    cout << ">\n" << flush;//----Checkpoint 7
       }else{
-	cout << "\n Interprocess Comm Failed";
-	return 1;
+	    cout << "\n Interprocess Comm Failed";
+	    return 1;
       }
       O.writeHeader(antHill.getBeta(),antHill.getRho(),antHill.getNumAnts(),antHillType,t.getName());
       clock_t t1, t2, t3;
       t1 = t2 = t3 = clock();
       //Main control sequence.
       for(int i = 0; !stopping; i++){
-	t2 = t3;
-	antHill.forage();
-	t3 = clock();
-	O.write(i, antHill.getIterBestDist(), antHill.getGlobBestDist(), (double)(t3 - t1) / CLOCKS_PER_SEC, (double)(t3 - t2) / CLOCKS_PER_SEC);
+	    t2 = t3;
+	    antHill.forage();
+	    t3 = clock();
+	    O.write(i, antHill.getIterBestDist(), antHill.getGlobBestDist(), (double)(t3 - t1) / CLOCKS_PER_SEC, (double)(t3 - t2) / CLOCKS_PER_SEC);
+        C.send(string(filen) + ":" + t.getName() + ":" + antHill.getTour() + ":" + Comm::floatToString(antHill.getIterBestDist()) + ":" + Comm::floatToString(antHill.getGlobBestDist()) + ":" + Comm::intToString(i));
 	if(maxTime != 0){
 	  if((int)((double)(t3 - t1) / CLOCKS_PER_SEC)> maxTime){
 	    stopping = true;
@@ -148,6 +170,7 @@ int main(int argc, char* argv[]){
 	  }
 	}
       }
+      C.send("TERM");
     }
   }else{
     cout << ">" << flush;//----Checkpoint 2

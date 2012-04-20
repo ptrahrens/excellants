@@ -10,7 +10,7 @@
 Colony::Colony(thrust::host_vector<float> newDistances, int newNumCities, int newNumAnts)
 {
   //defaults
-  beta = 2;
+  beta = 5;
   rho = 0.1;
   //world vars
   reps = 0;
@@ -39,6 +39,7 @@ Colony::Colony(thrust::host_vector<float> newDistances, int newNumCities, int ne
   //scratch variables
   AFloat = thrust::device_vector<float>(numAnts);
   CInt = thrust::device_vector<int>(numCities);
+  CInt2 = thrust::device_vector<int>(numCities);
   AInt = thrust::device_vector<int>(numAnts);
   ACInt = thrust::device_vector<int>(numAnts*numCities);
   ACInt2 = thrust::device_vector<int>(numAnts*numCities);
@@ -329,6 +330,15 @@ double Colony::getGlobBestDist()
 int Colony::getReps()
 {
   return reps;
+}
+
+std::string Colony::getTour()
+{
+  std::string result;
+  for(int i = 0; i < globBestTour.size(); i++){
+    result += Comm::intToString(globBestTour[i]) + ",";
+  }
+  return result;
 }
 
 //Copyright (c) 2012, Peter Ahrens

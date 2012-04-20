@@ -68,28 +68,28 @@ void RankBasedAntSystem::updatePheromones()
 	antDistances[i] = z;
 	antDistances[i] = antDistances[x];
 	antDistances[x] = z;
-	thrust::swap_ranges(antTours.begin() + x*numCities, antTours.begin() + (x+1)*numCities,antTours.begin() + i*numCities);
+    thrust::swap_ranges(antTours.begin() + i*numCities, antTours.begin() + (i+1)*numCities,antTours.begin() + x*numCities); 
   }
   thrust::transform(RBASWeight.begin(),
 		    RBASWeight.end(),
 		    antDistances.begin(),
 		    AFloat.begin(),
 		    thrust::divides<float>());
-  //AFloat[w-1] = w/globBestDist;
-  AFloat[w-1] = w/iterBestDist;//for a simple rankbased, without global pheromone
+  AFloat[w-1] = w/globBestDist;
+  //AFloat[w-1] = w/iterBestDist;//for a simple rankbased, without global pheromone
   ACInt.assign(antTours.begin(),antTours.end());
-  //thrust::scatter(globBestTour.begin(),globBestTour.end(),thrust::make_counting_iterator(numCities*(w-1)),ACInt.begin()); 
-  thrust::scatter(iterBestTour.begin(),
-		  iterBestTour.end(),
-		  thrust::make_counting_iterator(numCities*(w-1)),
-		  ACInt.begin()); //for a simple rankbased, without global pheromone
+  thrust::scatter(globBestTour.begin(),globBestTour.end(),thrust::make_counting_iterator(numCities*(w-1)),ACInt.begin()); 
+  //thrust::scatter(iterBestTour.begin(),
+	//	  iterBestTour.end(),
+	//	  thrust::make_counting_iterator(numCities*(w-1)),
+	//	  ACInt.begin()); //for a simple rankbased, without global pheromone
   thrust::transform(ACInt.begin(),
 		    ACInt.end(),
 		    thrust::make_permutation_iterator(ACInt.begin(),distMap.begin()), 
 		    ACInt2.begin(),
 		    saxpy_functor(numCities));
   //lay Pheromone 
-  for(int i = 0; i < numCities*w; i += numCities){
+  for(int i = 0; i < numCities*numAnts; i += numCities){
     thrust::transform(thrust::make_permutation_iterator(pheromones.begin(),ACInt2.begin() + i),
 		      thrust::make_permutation_iterator(pheromones.end(),ACInt2.begin() + i + numCities), 
 		      thrust::make_permutation_iterator(AFloat.begin(),ACKey.begin() + i),
@@ -151,6 +151,11 @@ double RankBasedAntSystem::getGlobBestDist()
 int RankBasedAntSystem::getReps()
 {
   return Colony::getReps();
+}
+
+std::string RankBasedAntSystem::getTour()
+{
+  return Colony::getTour();
 }
 
 //Copyright (c) 2012, Peter Ahrens
