@@ -6,12 +6,11 @@
 #####                                     #####
 #####                USAGE                #####
 #####                                     #####
-##### -h : make history file on close     #####
 ##### -a : disable window size adjustment #####
 #####      (not recommended)              #####
 ##### -g : disable graph display          #####
 ##### -f [arg] : input file name          #####
-#####      (default="GUIFILE")            #####
+#####      (default="GUIFile")            #####
 ###############################################
 
 import pygame
@@ -82,9 +81,7 @@ class Graph(): # Class for making a graph of the ACO route
     
     for i in range(1, len(sys.argv)):
       option = sys.argv[i]
-      if option == "-h":  
-        self.generateHistFile = True
-        continue
+      
       if option == "-a":
         self.AdjustWindow = False
         continue
