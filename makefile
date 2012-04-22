@@ -39,7 +39,7 @@ Colony.o: Colony.cu
 	nvcc Colony.cu -c $(CFLAGS)
 
 clean:
-	- rm Colony.o RankBasedAntSystem.o TSPReader.o Writer.o Comm.o Setup.o Ants
+	- rm Colony.o RankBasedAntSystem.o TSPReader.o Writer.o Comm.o Setup.o Ants GUIFile
 
 #Copyright (c) 2012, Peter Ahrens
 #All rights reserved.
