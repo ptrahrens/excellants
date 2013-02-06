@@ -65,7 +65,7 @@ void RankBasedAntSystem::updatePheromones()
   int x,z;
   for(int i = 0; i < w; i++){
     x = thrust::min_element(antDistances.begin() + i,antDistances.end())-(antDistances.begin() + i) + i;
-	antDistances[i] = z;
+	z = antDistances[i];
 	antDistances[i] = antDistances[x];
 	antDistances[x] = z;
     thrust::swap_ranges(antTours.begin() + i*numCities, antTours.begin() + (i+1)*numCities,antTours.begin() + x*numCities); 
