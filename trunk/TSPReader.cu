@@ -72,7 +72,9 @@ bool TSPReader::read(char* filen)
 	  Ycoords[i] = atof(line.substr(line.find_last_of(" ") + 1, line.length() - line.find_last_of(" ") - 1).c_str());
 	}
       }
-						 
+      if(line == "EOF"){
+        break;
+      }
     }
   }
   calculateDistances();

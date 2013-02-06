@@ -26,6 +26,12 @@
 #include <stdlib.h>
 #include <string>
 #include "Comm.h"
+
+//Linear Congruential Random Number Generator Values
+#define LCG_M 2147483648
+#define LCG_A 1103515245
+#define LCG_C 12345
+
 //saxpy_functor: Performs the operation s = a * x + y, where a is a constant.
 struct saxpy_functor
 {
@@ -46,7 +52,7 @@ struct treeSelect : public thrust::binary_function<thrust::tuple<int,float,unsig
     thrust::tuple<int,float,unsigned int> operator()(const thrust::tuple<int,float,unsigned int> tup1,const thrust::tuple<int,float,unsigned int> tup2) const 
   {
     const float prob = tup1.get<1>() + tup2.get<1>();
-    if(tup1.get<2>() * prob / 4294967296 < tup1.get<1>()){
+    if(tup1.get<2>() * prob / LCG_M < tup1.get<1>()){
       return thrust::make_tuple(tup1.get<0>(),prob,tup2.get<2>());
     } else{
       return thrust::make_tuple(tup2.get<0>(),prob,tup2.get<2>());
@@ -72,8 +78,7 @@ struct randStep : public thrust::unary_function<unsigned int, unsigned int>
   __host__ __device__
     unsigned int operator()(const unsigned int x) const
   {
-	//numerical recipies LCG values
-    return ((x * 1664525) + 1013904223) % 4294967296;
+    return ((x * LCG_A) + LCG_C) % LCG_M;
   }
 };
 
